@@ -168,5 +168,11 @@ class Ball
   end
 end
 
+Class Level
+  def initalize(game_window)
+    @game_window = game_window
+  end    
+end
+
 window = MyGame.new
 window.show
