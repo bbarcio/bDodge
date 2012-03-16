@@ -171,7 +171,9 @@ end
 Class Level
   def initalize(game_window)
     @game_window = game_window
-  end    
+    @level = 0
+  end 
+  
 end
 
 window = MyGame.new
