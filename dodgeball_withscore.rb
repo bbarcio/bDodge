@@ -1,15 +1,16 @@
 require 'rubygems'
 require 'gosu'
 
+#pond5.com to purchase? media royalty free
 class MyGame < Gosu::Window
+  PADDING = 10
   def initialize
-    super(600, 800, false)
+    super(800, 800, false)
     @player1 = Player.new(self)
-    @balls = 3.times.map {Ball.new(self)}
+    @level = Level.new(self, @player1)
     @running = true
     self.caption = "Dodgeball in space"
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
-    #@imageText = Gosu::Image.from_text(self, "something", Gosu::default_font_name, 20, 2, 100, :left)
   end
 
   def update
@@ -30,13 +31,8 @@ class MyGame < Gosu::Window
       if button_down? Gosu::Button::KbDown
         @player1.move_down
       end
-
-      @balls.each {|ball| ball.update}
-      if @balls[0].y == 0
-        @player1.increase_score
-      end
-      
-      if @player1.hit_by? @balls
+      @level.update
+      if @player1.hit_by? @level.balls
         stop_game!
       end
     else
@@ -49,10 +45,11 @@ class MyGame < Gosu::Window
 
   def draw
     @player1.draw
-    @balls.each {|ball| ball.draw}
-    @font.draw("Score: #{@player1.score}", 500,10,3)
+    @level.draw
+    score_text = "Score: #{@player1.score}"
+    @font.draw(score_text, width - (@font.text_width (score_text)+PADDING),PADDING,3)
     unless @running
-      @font.draw("Hit 'esc' to restart", 10,10,3)
+      @font.draw("Hit 'esc' to restart", PADDING,PADDING,3)
     end
     
   end
@@ -63,7 +60,7 @@ class MyGame < Gosu::Window
 
   def restart_game
     @running = true
-    @balls.each {|ball| ball.reset!}
+    @level.reset
     @player1.reset_score
   end
 end
@@ -125,9 +122,6 @@ class Player
     end
   end
 
-#  def hit_by?(ball)
-#    Gosu::distance(@x, @y, ball.x, ball.y) < 50
-#  end
   def hit_by?(balls)
     balls.any? {|ball|Gosu::distance(@x, @y, ball.x, ball.y) < 50}
   end
@@ -136,17 +130,24 @@ class Player
 end
 
 class Ball
-  def initialize(game_window)
+  def initialize(game_window, player, xinc = 0, yinc = 10, xinit = lambda {rand(@game_window.width)}, yinit = lambda {0})
     @game_window = game_window
     @icon = Gosu::Image.new(@game_window, "asteroid.png", true)
+    @player = player
+    @xinc = xinc
+    @yinc = yinc
+    @xinit = xinit
+    @yinit = yinit
     reset!
   end
 
   def update
-    if @y > @game_window.height
+    if (@y > @game_window.height || @x > @game_window.width)
+      @player.increase_score
       reset!
     else
-      @y = @y + 10
+      @y = @y + @yinc
+      @x = @x + @xinc
     end
   end
 
@@ -163,17 +164,34 @@ class Ball
   end
 
   def reset!
-    @y = 0
-    @x = rand(@game_window.width)
+    @y = @yinit.call
+    @x = @xinit.call
   end
 end
 
-Class Level
-  def initalize(game_window)
+class Level
+  attr_accessor :balls
+  attr_accessor :level
+  
+  def initialize(game_window, player)
     @game_window = game_window
-    @level = 0
+    @player = player
+    @balls = 3.times.map {Ball.new(game_window, player)}
+    reset
   end 
   
+  def update
+      @balls.each {|ball| ball.update}
+  end
+  
+  def draw
+    @balls.each {|ball| ball.draw}
+  end
+
+  def reset
+  	@balls.each {|ball| ball.reset!}
+  	@level = 0
+  end
 end
 
 window = MyGame.new
