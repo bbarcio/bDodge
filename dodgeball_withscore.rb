@@ -42,7 +42,7 @@ class MyGame < Gosu::Window
     @font.draw(level_text, PADDING,PADDING,3)
     if @player1.shield?
     	shield_text = "Shield Remaining #{@player1.shield_time_left}"
-    	@font.draw(shield_text, PADDING, height - (20 + PADDING),3)
+    	@font.draw(shield_text,  width/2 - (@font.text_width(shield_text)/2),height/2 - (20)/2,3)
 	else
 		shield_text = "Shield: #{@player1.shield_count}"
     	@font.draw(shield_text, PADDING, height - (20 + PADDING),3)
@@ -61,17 +61,20 @@ class MyGame < Gosu::Window
 
   def restart_game
     @running = true
-    @level.reset
     @player1.reset
+    @level.reset
   end
 end
 
 class Player
   SHIELD_LENGTH = 3
   attr_reader :shield_count
+  attr_accessor :player_icon, :player_shield_icon
   def initialize(game_window)
     @game_window = game_window
-    @icon = Gosu::Image.new(@game_window, "player1.png", true)
+    @player_icon = Gosu::Image.new(@game_window, "player1.png", true)
+    @player_shield_icon = Gosu::Image.new(@game_window, "player1_neon.jpg", true)
+    @icon = @player_icon
 	reset
   end
 
@@ -159,7 +162,7 @@ class Player
         @shield_count = @shield_count - 1
   		@shield = true
   		@shield_time = Time.now
-  		@icon = Gosu::Image.new(@game_window, "player1_neon.jpg", true)
+  		@icon = @player_shield_icon
   	end
   end 
   
@@ -168,10 +171,8 @@ class Player
   end
   
   def deactivate_shield
-  	if @shield
-  		@shield = false
-  		@icon = Gosu::Image.new(@game_window, "player1.png", true)
-    end
+    @shield = false
+    @icon = @player_icon
   end
   
   def shield?
@@ -193,6 +194,7 @@ class Player
 end
 
 class Ball
+  attr_accessor :icon
   def initialize(game_window, player, xinc = 0, yinc = 10, xinit = lambda {rand(@game_window.width)}, yinit = lambda {0})
     @game_window = game_window
     @icon = Gosu::Image.new(@game_window, "asteroid.png", true)
@@ -280,8 +282,13 @@ class Level
 
   	@balls = @balls + @current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if @current_config[:from_top]
   	@balls = @balls + @current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.width)})} if @current_config[:from_left]
-    @start_time = Time.now
+    #set up level icons
+    @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, @current_config[:ball_image], true)} if @current_config[:ball_image]
+    @player.player_icon = Gosu::Image.new(@game_window, @current_config[:player_image], true) if @current_config[:player_image]
+    @player.player_shield_icon = Gosu::Image.new(@game_window, @current_config[:player_shield_image], true) if @current_config[:player_shield_image]
+    @player.deactivate_shield
     @player.increase_shield
+    @start_time = Time.now
   end
   
   def reset
