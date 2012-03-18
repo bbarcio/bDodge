@@ -1,0 +1,14 @@
+--- 
+- :from_top: 1
+  :duration: 10
+- :from_top: 3
+  :duration: 10
+- :duration: 10
+  :from_left: 3
+- :from_top: 5
+  :duration: 10
+- :duration: 10
+  :from_left: 5
+- :from_top: 3
+  :duration: 10
+  :from_left: 3
