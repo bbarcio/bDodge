@@ -19,6 +19,8 @@ class MyGame < Gosu::Window
     @highscore = 0
     @background_color = BLACK
     @font_color = WHITE
+    @music = Gosu::Song.new(self, "default/bSong1.mp3")
+  	@music.play(true)
   end
 
   def update
