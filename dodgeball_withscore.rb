@@ -4,7 +4,11 @@ require 'yaml'
 #pond5.com to purchase? media royalty free
 class MyGame < Gosu::Window
   attr_reader :running
+  attr_accessor :background_color
+  attr_accessor :font_color
   PADDING = 10
+  BLACK = Gosu::Color.new(0xff000000)
+  WHITE = Gosu::Color.new(0xffffffff)
   def initialize
     super(800, 800, false)
     @player1 = Player.new(self)
@@ -13,6 +17,8 @@ class MyGame < Gosu::Window
     self.caption = "Dodgeball in space"
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @highscore = 0
+    @background_color = BLACK
+    @font_color = WHITE
   end
 
   def update
@@ -32,24 +38,26 @@ class MyGame < Gosu::Window
   end
 
   def draw
+    draw_quad(0, 0, @background_color, width, 0, @background_color, 
+    	0, height, @background_color, width, height, @background_color)
     @player1.draw
     @level.draw
     score_text = "Score: #{@player1.score}"
-    @font.draw(score_text, width - (@font.text_width(score_text)+PADDING),PADDING,3)
+    @font.draw(score_text, width - (@font.text_width(score_text)+PADDING),PADDING,3,1,1,@font_color)
     highscore_text = "Highscore: #{@highscore}"
-    @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),PADDING,3)
+    @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),PADDING,3,1,1,@font_color)
     level_text = "Level #{@level.level + 1} (#{@level.time_left})"
-    @font.draw(level_text, PADDING,PADDING,3)
+    @font.draw(level_text, PADDING,PADDING,3,1,1,@font_color)
     if @player1.shield?
     	shield_text = "Shield Remaining #{@player1.shield_time_left}"
-    	@font.draw(shield_text,  width/2 - (@font.text_width(shield_text)/2),height/2 - (20)/2,3)
-	else
-		shield_text = "Shield: #{@player1.shield_count}"
-    	@font.draw(shield_text, PADDING, height - (20 + PADDING),3)
+    	@font.draw(shield_text,  width/2 - (@font.text_width(shield_text)/2),height/2 - (20)/2,3,1,1,@font_color)
 	end
+	shield_text = "Shield: #{@player1.shield_count}"
+    @font.draw(shield_text, PADDING, height - (20 + PADDING),3,1,1,@font_color)
+	
     unless @running
       restart_text = "Hit 'esc' to restart"
-      @font.draw(restart_text, width/2 - (@font.text_width(restart_text)/2),height/2 - (20)/2,3)
+      @font.draw(restart_text, width/2 - (@font.text_width(restart_text)/2),height/2 - (20)/2,3,1,1,@font_color)
     end
     
   end
@@ -67,6 +75,7 @@ class MyGame < Gosu::Window
 end
 
 class Player
+  HIT_BUFFER = 30
   SHIELD_LENGTH = 3
   attr_reader :shield_count
   attr_accessor :player_icon, :player_shield_icon
@@ -134,8 +143,8 @@ class Player
   end
 
   def move_right
-    if @x > (@game_window.width - 100)
-      @x = @game_window.width - 100
+    if @x > (@game_window.width - @icon.width)
+      @x = @game_window.width - @icon.width
     else
       @x = @x + 10
     end
@@ -187,7 +196,9 @@ class Player
 
   def hit_by?(balls)
     return false if shield?
-    balls.any? {|ball|Gosu::distance(@x, @y, ball.x, ball.y) < 50}
+    balls.any? do |ball|
+      Gosu::distance(@x+@icon.width/2, @y+@icon.height/2,ball.x + ball.icon.width/2, ball.y + ball.icon.height/2) < (@icon.height/2 + ball.icon.height/2 - HIT_BUFFER)
+    end
   end
 
 
@@ -278,9 +289,24 @@ class Level
     else
     	@current_config = @@level_config[@level]
     end
-    @balls = []
 
-  	@balls = @balls + @current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if @current_config[:from_top]
+    #set level background color
+    if @current_config[:background_color]
+      @game_window.background_color = Gosu::Color.new(@current_config[:background_color])
+    else
+    	# if no background color specified, reset back to black
+    	@game_window.background_color = MyGame::BLACK
+    end
+    #set font color
+    if @current_config[:font_color]
+      @game_window.font_color = Gosu::Color.new(@current_config[:font_color])
+    else
+    	# if no background color specified, reset back to black
+    	@game_window.font_color = MyGame::WHITE
+    end
+    #set up level balls
+    @balls = []
+    @balls = @balls + @current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if @current_config[:from_top]
   	@balls = @balls + @current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.width)})} if @current_config[:from_left]
     #set up level icons
     @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, @current_config[:ball_image], true)} if @current_config[:ball_image]

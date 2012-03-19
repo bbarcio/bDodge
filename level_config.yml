@@ -27,6 +27,14 @@
 - :from_top: 3
   :from_left: 3
   :duration: 10
+  :player_image: rainbow/unicorn.jpg
+  :player_shield_image: rainbow/butterfly3.jpg
+  :ball_image: rainbow/butterfly1.jpg
+  :background_color: 0xFFFFFFFF
+  :font_color: 0xFFFA5094
+- :from_top: 3
+  :from_left: 3
+  :duration: 10
   :player_image: default/player1.png
   :player_shield_image: default/player1_neon.jpg
   :ball_image: default/asteroid.png
