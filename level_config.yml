@@ -1,32 +1,32 @@
 --- 
 - :from_top: 1
-  :duration: 5
-  :player_image: player1.png
-  :player_shield_image: player1_neon.jpg
-  :ball_image: asteroid.png
+  :duration: 10
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.jpg
+  :ball_image: default/asteroid.png
 - :from_top: 3
-  :duration: 5
-  :player_image: player1.png
-  :player_shield_image: player1_neon.jpg
-  :ball_image: asteroid.png
+  :duration: 10
+  :player_image: default/player1.png	
+  :player_shield_image: default/player1_neon.jpg
+  :ball_image: default/asteroid.png
 - :from_left: 3
   :duration: 10
-  :player_image: player1.png
-  :player_shield_image: player1_neon.jpg
-  :ball_image: asteroid.png
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.jpg
+  :ball_image: default/asteroid.png
 - :from_top: 5
   :duration: 10
-  :player_image: player1.png
-  :player_shield_image: player1_neon.jpg
-  :ball_image: asteroid.png
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.jpg
+  :ball_image: default/asteroid.png
 - :from_left: 5
   :duration: 10
-  :player_image: player1.png
-  :player_shield_image: player1_neon.jpg
-  :ball_image: asteroid.png
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.jpg
+  :ball_image: default/asteroid.png
 - :from_top: 3
   :from_left: 3
   :duration: 10
-  :player_image: player1.png
-  :player_shield_image: player1_neon.jpg
-  :ball_image: asteroid.png
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.jpg
+  :ball_image: default/asteroid.png

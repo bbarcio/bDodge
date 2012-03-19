@@ -72,8 +72,8 @@ class Player
   attr_accessor :player_icon, :player_shield_icon
   def initialize(game_window)
     @game_window = game_window
-    @player_icon = Gosu::Image.new(@game_window, "player1.png", true)
-    @player_shield_icon = Gosu::Image.new(@game_window, "player1_neon.jpg", true)
+    @player_icon = Gosu::Image.new(@game_window, "default/player1.png", true)
+    @player_shield_icon = Gosu::Image.new(@game_window, "default/player1_neon.jpg", true)
     @icon = @player_icon
 	reset
   end
@@ -197,7 +197,7 @@ class Ball
   attr_accessor :icon
   def initialize(game_window, player, xinc = 0, yinc = 10, xinit = lambda {rand(@game_window.width)}, yinit = lambda {0})
     @game_window = game_window
-    @icon = Gosu::Image.new(@game_window, "asteroid.png", true)
+    @icon = Gosu::Image.new(@game_window, "default/asteroid.png", true)
     @player = player
     @xinc = xinc
     @yinc = yinc
