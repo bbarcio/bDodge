@@ -16,7 +16,7 @@ class MyGame < Gosu::Window
     @running = true
     self.caption = "Dodgeball in space"
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
-    @highscore = 0
+    @highscores = YAML::load(File.open 'highscores.yml')
     @background_color = BLACK
     @font_color = WHITE
     @music = Gosu::Song.new(self, "default/bSong1.mp3")
@@ -46,7 +46,7 @@ class MyGame < Gosu::Window
     @level.draw
     score_text = "Score: #{@player1.score}"
     @font.draw(score_text, width - (@font.text_width(score_text)+PADDING),PADDING,3,1,1,@font_color)
-    highscore_text = "Highscore: #{@highscore}"
+    highscore_text = "Highscore: #{@highscores[0][:score]}"
     @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),PADDING,3,1,1,@font_color)
     level_text = "Level #{@level.level + 1} (#{@level.time_left})"
     @font.draw(level_text, PADDING,PADDING,3,1,1,@font_color)
@@ -59,14 +59,29 @@ class MyGame < Gosu::Window
 	
     unless @running
       restart_text = "Hit 'esc' to restart"
-      @font.draw(restart_text, width/2 - (@font.text_width(restart_text)/2),height/2 - (20)/2,3,1,1,@font_color)
+      @font.draw(restart_text, width/2 - (@font.text_width(restart_text)/2),height/2 - (20)/2-50,3,1,1,@font_color)
+      highscore_text = "Highscores"
+
+      @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),height/2 - (20)/2,3,1,1,@font_color)
+      nextline = 30
+      @highscores.each do |h| 
+        highscore_text = h[:name] + ': ' + h[:score].to_s
+        @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),height/2 - (20)/2 + nextline,3,1,1,@font_color)
+        nextline = nextline + 30
+      end
     end
     
   end
 
   def stop_game!
     @running = false
-    @highscore = @player1.score if @player1.score > @highscore
+    if @player1.score > @highscores[4][:score]
+   	  @highscores[4][:score] = @player1.score 
+      @highscores.sort! {|a,b| b[:score] <=> a[:score]}
+      f = File.open('highscores.yml', 'w+')
+      f.write(@highscores.to_yaml)
+      f.close
+    end
   end
 
   def restart_game
@@ -104,7 +119,7 @@ class Player
   end
   
   def increase_score
-    @score = @score + 1
+    @score = @score + 10
   end
   
   def draw
@@ -261,6 +276,9 @@ class Level
   def initialize(game_window, player)
     @game_window = game_window
     @player = player
+    @between_levels = false
+    @level_delay = 3
+    @level_font = Gosu::Font.new(@game_window, Gosu::default_font_name, 20)
    # @balls = 3.times.map {Ball.new(game_window, player)}
     reset
   end 
@@ -276,13 +294,25 @@ class Level
     if (time_left > 0)
     	@balls.each {|ball| ball.update}
 	else
-		@level = @level + 1
-		start_level
+	    @level = @level + 1 unless @between_levels
+		if time_left + @level_delay < 0
+		    @between_levels = false
+			start_level
+		else
+		  @between_levels = true
+		end
+		
 	end
   end
   
   def draw
-    @balls.each {|ball| ball.draw}
+    unless @between_levels
+    	@balls.each {|ball| ball.draw}
+	else
+	  level_text = "Level #{@level + 1}"
+      @level_font.draw(level_text, @game_window.width/2 - (@level_font.text_width(level_text)/2),@game_window.height/2 - (20)/2,3,1,1,@game_window.font_color)
+
+	end
   end
   
   def start_level    
