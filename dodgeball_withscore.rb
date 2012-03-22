@@ -14,23 +14,25 @@ class MyGame < Gosu::Window
     @player1 = Player.new(self)
     @level = Level.new(self, @player1)
     @running = true
-    self.caption = "Dodgeball in space"
+    @paused = false
+    self.caption = "bDodge"
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @highscores = YAML::load(File.open 'highscores.yml')
     @background_color = BLACK
     @font_color = WHITE
+    @death_sound = Gosu::Sample.new(self, "default/death.mp3")
     @music = Gosu::Song.new(self, "default/bSong1.mp3")
   	@music.play(true)
   end
 
   def update
     if @running
-
-      @player1.update
-      @level.update
-      if @player1.hit_by? @level.balls
-        stop_game!
-      end
+        @player1.update
+        @level.update
+        if @player1.hit_by? @level.balls
+          @death_sound.play
+          stop_game!
+        end
     else
       # the game is currently stopped
       if button_down? Gosu::Button::KbEscape
@@ -48,7 +50,7 @@ class MyGame < Gosu::Window
     @font.draw(score_text, width - (@font.text_width(score_text)+PADDING),PADDING,3,1,1,@font_color)
     highscore_text = "Highscore: #{@highscores[0][:score]}"
     @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),PADDING,3,1,1,@font_color)
-    level_text = "Level #{@level.level + 1} (#{@level.time_left})"
+    level_text = "Level #{@level.level + 1} (#{@level.time_left < 0 ? 0 : @level.time_left})"
     @font.draw(level_text, PADDING,PADDING,3,1,1,@font_color)
     if @player1.shield?
     	shield_text = "Shield Remaining #{@player1.shield_time_left}"
@@ -93,6 +95,7 @@ end
 
 class Player
   HIT_BUFFER = 30
+  CLOSE_BUFFER = 60
   SHIELD_LENGTH = 3
   attr_reader :shield_count
   attr_accessor :player_icon, :player_shield_icon
@@ -101,6 +104,8 @@ class Player
     @player_icon = Gosu::Image.new(@game_window, "default/player1.png", true)
     @player_shield_icon = Gosu::Image.new(@game_window, "default/player1_neon.jpg", true)
     @icon = @player_icon
+    @close_sound = Gosu::Sample.new(@game_window, "default/close_shave.mp3")	
+    @shield_sound = Gosu::Sample.new(@game_window, "default/shield.mp3")	
 	reset
   end
 
@@ -189,6 +194,7 @@ class Player
   		@shield = true
   		@shield_time = Time.now
   		@icon = @player_shield_icon
+  		@shield_sound_instance = @shield_sound.play
   	end
   end 
   
@@ -199,6 +205,7 @@ class Player
   def deactivate_shield
     @shield = false
     @icon = @player_icon
+    @shield_sound_instance.stop if @shield_sound_instance
   end
   
   def shield?
@@ -213,9 +220,18 @@ class Player
 
   def hit_by?(balls)
     return false if shield?
-    balls.any? do |ball|
+    retval = balls.any? do |ball|
       Gosu::distance(@x+@icon.width/2, @y+@icon.height/2,ball.x + ball.icon.width/2, ball.y + ball.icon.height/2) < (@icon.height/2 + ball.icon.height/2 - HIT_BUFFER)
     end
+    
+    close = balls.any? do |ball|
+      Gosu::distance(@x+@icon.width/2, @y+@icon.height/2,ball.x + ball.icon.width/2, ball.y + ball.icon.height/2) < (@icon.height/2 + ball.icon.height/2 - CLOSE_BUFFER)
+    end
+    if close
+          @close_sound.play
+    end
+    
+    retval  
   end
 
 
@@ -300,6 +316,8 @@ class Level
 			start_level
 		else
 		  @between_levels = true
+		  sound = Gosu::Sample.new(@game_window, "default/level_finish.mp3")	
+		  sound.play
 		end
 		
 	end
