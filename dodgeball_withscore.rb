@@ -22,7 +22,7 @@ class MyGame < Gosu::Window
     @font_color = WHITE
     @death_sound = Gosu::Sample.new(self, "default/death.mp3")
     @music = Gosu::Song.new(self, "default/bSong1.mp3")
-  	@music.play(true)
+  	#@music.play(true)
   end
 
   def update
@@ -95,7 +95,7 @@ end
 
 class Player
   HIT_BUFFER = 30
-  CLOSE_BUFFER = 60
+  CLOSE_BUFFER = -60
   SHIELD_LENGTH = 3
   attr_reader :shield_count
   attr_accessor :player_icon, :player_shield_icon
@@ -220,18 +220,21 @@ class Player
 
   def hit_by?(balls)
     return false if shield?
-    retval = balls.any? do |ball|
+    hit = balls.any? do |ball|
       Gosu::distance(@x+@icon.width/2, @y+@icon.height/2,ball.x + ball.icon.width/2, ball.y + ball.icon.height/2) < (@icon.height/2 + ball.icon.height/2 - HIT_BUFFER)
     end
     
-    close = balls.any? do |ball|
+    close = !hit && balls.any? do |ball|
       Gosu::distance(@x+@icon.width/2, @y+@icon.height/2,ball.x + ball.icon.width/2, ball.y + ball.icon.height/2) < (@icon.height/2 + ball.icon.height/2 - CLOSE_BUFFER)
     end
-    if close
-          @close_sound.play
+    if close 
+          @close_sound_instance = @close_sound.play unless @close_sound_instance
+    else
+    	@close_sound_instance.stop if @close_sound_instance
+    	@close_sound_instance = nil
     end
     
-    retval  
+    hit  
   end
 
 
@@ -295,6 +298,8 @@ class Level
     @between_levels = false
     @level_delay = 3
     @level_font = Gosu::Font.new(@game_window, Gosu::default_font_name, 20)
+    @level_finish_sound = Gosu::Sample.new(@game_window, "default/level_finish.mp3")	
+
    # @balls = 3.times.map {Ball.new(game_window, player)}
     reset
   end 
@@ -316,8 +321,7 @@ class Level
 			start_level
 		else
 		  @between_levels = true
-		  sound = Gosu::Sample.new(@game_window, "default/level_finish.mp3")	
-		  sound.play
+		  @level_finish_sound_instance = @level_finish_sound.play unless @level_finish_sound_instance
 		end
 		
 	end
@@ -334,6 +338,8 @@ class Level
   end
   
   def start_level    
+    @level_finish_sound_instance.stop if @level_finish_sound_instance
+    @level_finish_sound_instance = nil
     if @level >= @@level_config.size
     	@current_config = @@level_config[@@level_config.size - 1]
     else
