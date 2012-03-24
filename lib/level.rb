@@ -16,7 +16,7 @@ class Level
     @level_delay = 3
     @level_font = Gosu::Font.new(@game_window, Gosu::default_font_name, 20)
     @level_finish_sound = Gosu::Sample.new(@game_window, "default/level_finish.mp3")	
-
+    @time_left = 0
    # @balls = 3.times.map {Ball.new(game_window, player)}
     reset
   end 

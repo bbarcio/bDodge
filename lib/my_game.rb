@@ -9,7 +9,7 @@ class MyGame < Gosu::Window
     super(800, 800, false)
     @player1 = Player.new(self)
     @level = Level.new(self, @player1)
-    @running = true
+    @running = false
     @paused = false
     self.caption = "bDodge"
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
@@ -36,6 +36,7 @@ class MyGame < Gosu::Window
       end
     end
   end
+  
   def button_down(id)
   	if id == Gosu::Button::KbM
 		if @music.playing?
