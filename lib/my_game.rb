@@ -34,10 +34,19 @@ class MyGame < Gosu::Window
       if button_down? Gosu::Button::KbEscape
         restart_game
       end
-      if button_down? Gosu::Button::KbQ
-      	self.close
-      end
     end
+  end
+  def button_down(id)
+  	if id == Gosu::Button::KbM
+		if @music.playing?
+			@music.stop 
+		else
+			@music.play(true) unless @music.playing?
+		end
+  	end
+  	if id == Gosu::Button::KbQ
+      	self.close
+	end
   end
 
   def draw
