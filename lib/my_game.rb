@@ -1,6 +1,7 @@
 class MyGame < Gosu::Window
   attr_reader :running
   attr_accessor :background_color
+  attr_accessor :background_image
   attr_accessor :font_color
   PADDING = 10
   BLACK = Gosu::Color.new(0xff000000)
@@ -15,6 +16,7 @@ class MyGame < Gosu::Window
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @highscores = YAML::load(File.open 'highscores.yml')
     @background_color = BLACK
+    @background_image = Gosu::Image.new(self, "default/orange_nebula_stars.jpg", true)
     @font_color = WHITE
     @death_sound = Gosu::Sample.new(self, "default/death.mp3")
     @music = Gosu::Song.new(self, "default/bSong1.mp3")
@@ -51,15 +53,19 @@ class MyGame < Gosu::Window
   end
 
   def draw
-    draw_quad(0, 0, @background_color, width, 0, @background_color, 
-    	0, height, @background_color, width, height, @background_color)
+    if @background_image
+    	@background_image.draw(0,0,0)
+    else
+    	draw_quad(0, 0, @background_color, width, 0, @background_color, 
+    	  0, height, @background_color, width, height, @background_color)
+	end
     @player1.draw
     @level.draw
     score_text = "Score: #{@player1.score}"
     @font.draw(score_text, width - (@font.text_width(score_text)+PADDING),PADDING,3,1,1,@font_color)
     highscore_text = "Highscore: #{@highscores[0][:score]}"
     @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),PADDING,3,1,1,@font_color)
-    level_text = "Level #{@level.level + 1} (#{@level.time_left < 0 ? 0 : @level.time_left})"
+    level_text = "Level #{@level.level + 1}"
     @font.draw(level_text, PADDING,PADDING,3,1,1,@font_color)
     if @player1.shield?
     	shield_text = "Shield Remaining #{@player1.shield_time_left}"

@@ -2,28 +2,40 @@
 - :from_top: 1
   :duration: 10
   :player_image: default/player1.png
-  :player_shield_image: default/player1_neon.jpg
+  :player_shield_image: default/player1_neon.png
   :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
 - :from_top: 3
   :duration: 10
   :player_image: default/player1.png	
-  :player_shield_image: default/player1_neon.jpg
+  :player_shield_image: default/player1_neon.png
   :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
 - :from_left: 3
   :duration: 10
   :player_image: default/player1.png
-  :player_shield_image: default/player1_neon.jpg
+  :player_shield_image: default/player1_neon.png
   :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
 - :from_top: 5
   :duration: 10
   :player_image: default/player1.png
-  :player_shield_image: default/player1_neon.jpg
+  :player_shield_image: default/player1_neon.png
   :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
 - :from_left: 5
   :duration: 10
   :player_image: default/player1.png
-  :player_shield_image: default/player1_neon.jpg
+  :player_shield_image: default/player1_neon.png
   :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
+- :from_top: 3
+  :from_left: 3
+  :duration: 10
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.png
+  :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
 - :from_top: 3
   :from_left: 3
   :duration: 10
@@ -32,9 +44,3 @@
   :ball_image: rainbow/butterfly1.jpg
   :background_color: 0xFFFFFFFF
   :font_color: 0xFFFA5094
-- :from_top: 3
-  :from_left: 3
-  :duration: 10
-  :player_image: default/player1.png
-  :player_shield_image: default/player1_neon.jpg
-  :ball_image: default/asteroid.png

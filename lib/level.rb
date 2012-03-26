@@ -17,7 +17,6 @@ class Level
     @level_font = Gosu::Font.new(@game_window, Gosu::default_font_name, 20)
     @level_finish_sound = Gosu::Sample.new(@game_window, "default/level_finish.mp3")	
     @time_left = 0
-   # @balls = 3.times.map {Ball.new(game_window, player)}
     reset
   end 
   
@@ -50,7 +49,6 @@ class Level
 	else
 	  level_text = "Level #{@level + 1}"
       @level_font.draw(level_text, @game_window.width/2 - (@level_font.text_width(level_text)/2),@game_window.height/2 - (20)/2,3,1,1,@game_window.font_color)
-
 	end
   end
   
@@ -62,29 +60,38 @@ class Level
     else
     	@current_config = @@level_config[@level]
     end
+    configure_level(@current_config)
+  end
+  
+  def configure_level(current_config)
 
     #set level background color
-    if @current_config[:background_color]
-      @game_window.background_color = Gosu::Color.new(@current_config[:background_color])
+    if current_config[:background_color]
+      @background_image = nil
+      @game_window.background_color = Gosu::Color.new(current_config[:background_color])
     else
     	# if no background color specified, reset back to black
     	@game_window.background_color = MyGame::BLACK
     end
+    if current_config[:background_image]
+        @game_window.background_image = Gosu::Image.new(@game_window, current_config[:background_image], true)
+    end
+
     #set font color
-    if @current_config[:font_color]
-      @game_window.font_color = Gosu::Color.new(@current_config[:font_color])
+    if current_config[:font_color]
+      @game_window.font_color = Gosu::Color.new(current_config[:font_color])
     else
     	# if no background color specified, reset back to black
     	@game_window.font_color = MyGame::WHITE
     end
     #set up level balls
     @balls = []
-    @balls = @balls + @current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if @current_config[:from_top]
-  	@balls = @balls + @current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.width)})} if @current_config[:from_left]
+    @balls = @balls + current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if current_config[:from_top]
+  	@balls = @balls + current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.width)})} if current_config[:from_left]
     #set up level icons
-    @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, @current_config[:ball_image], true)} if @current_config[:ball_image]
-    @player.player_icon = Gosu::Image.new(@game_window, @current_config[:player_image], true) if @current_config[:player_image]
-    @player.player_shield_icon = Gosu::Image.new(@game_window, @current_config[:player_shield_image], true) if @current_config[:player_shield_image]
+    @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, current_config[:ball_image], true)} if current_config[:ball_image]
+    @player.player_icon = Gosu::Image.new(@game_window, current_config[:player_image], true) if current_config[:player_image]
+    @player.player_shield_icon = Gosu::Image.new(@game_window, current_config[:player_shield_image], true) if current_config[:player_shield_image]
     @player.deactivate_shield
     @player.increase_shield
     @start_time = Time.now
