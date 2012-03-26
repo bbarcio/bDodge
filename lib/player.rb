@@ -7,7 +7,7 @@ class Player
   def initialize(game_window)
     @game_window = game_window
     @player_icon = Gosu::Image.new(@game_window, "default/player1.png", true)
-    @player_shield_icon = Gosu::Image.new(@game_window, "default/player1_neon.jpg", true)
+    @player_shield_icon = Gosu::Image.new(@game_window, "default/player1_neon.png", true)
     @icon = @player_icon
     @close_sound = Gosu::Sample.new(@game_window, "default/close_shave.mp3")	
     @shield_sound = Gosu::Sample.new(@game_window, "default/shield.mp3")	

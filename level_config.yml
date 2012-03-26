@@ -32,15 +32,8 @@
 - :from_top: 3
   :from_left: 3
   :duration: 10
-  :player_image: default/player1.png
-  :player_shield_image: default/player1_neon.png
-  :ball_image: default/asteroid.png
-  :background_image: default/orange_nebula_stars.jpg
-- :from_top: 3
-  :from_left: 3
-  :duration: 10
-  :player_image: rainbow/unicorn.jpg
-  :player_shield_image: rainbow/butterfly3.jpg
-  :ball_image: rainbow/butterfly1.jpg
-  :background_color: 0xFFFFFFFF
+  :player_image: rainbow/unicorn.png
+  :player_shield_image: rainbow/butterfly3.png
+  :ball_image: rainbow/butterfly1.png
   :font_color: 0xFFFA5094
+  :background_image: rainbow/rainbow_background.jpg
