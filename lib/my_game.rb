@@ -3,13 +3,15 @@ class MyGame < Gosu::Window
   attr_accessor :background_color
   attr_accessor :background_image
   attr_accessor :font_color
+  Z_BG, Z_PLAYER, Z_BALL = (0..2).to_a
   PADDING = 10
   BLACK = Gosu::Color.new(0xff000000)
   WHITE = Gosu::Color.new(0xffffffff)
-  def initialize
+ 
+  def initialize(level_config_file)    
     super(800, 800, false)
     @player1 = Player.new(self)
-    @level = Level.new(self, @player1)
+    @level = Level.new(self, @player1, level_config_file)
     @running = false
     @paused = false
     self.caption = "bDodge"
@@ -54,7 +56,7 @@ class MyGame < Gosu::Window
 
   def draw
     if @background_image
-    	@background_image.draw(0,0,0)
+    	@background_image.draw(0,0,Z_BG)
     else
     	draw_quad(0, 0, @background_color, width, 0, @background_color, 
     	  0, height, @background_color, width, height, @background_color)

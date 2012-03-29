@@ -33,7 +33,7 @@ class Player
   end
   
   def draw
-    @icon.draw(@x,@y,1)
+    @icon.draw(@x,@y,MyGame::Z_PLAYER)
   end
 
   def update

@@ -12,7 +12,7 @@ class Ball
   end
 
   def update
-    if (@y > @game_window.height || @x > @game_window.width)
+    if (@y > @game_window.height || @x > @game_window.width || @y < 0 || @x < 0)
       @player.increase_score
       reset!
     else
@@ -22,7 +22,7 @@ class Ball
   end
 
   def draw
-    @icon.draw(@x,@y,2)
+    @icon.draw(@x,@y,MyGame::Z_BALL)
   end
 
   def x

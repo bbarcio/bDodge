@@ -1,15 +1,9 @@
 class Level
   attr_accessor :balls
   attr_accessor :level
-  @@level_config = YAML::load(File.open('level_config.yml'))
-#  [
-#        {:from_top => 1, :duration => 20}, 
-#  		{:from_top => 3, :duration => 20}, 
-#  		{:from_left => 3, :duration => 20},
-# 		{:from_top => 3, :from_left => 3, :duration => 20}
-# 	]
   
-  def initialize(game_window, player)
+  def initialize(game_window, player, level_config_file = 'level_config.yml')
+    @level_config = YAML::load(File.open(level_config_file))
     @game_window = game_window
     @player = player
     @between_levels = false
@@ -55,10 +49,10 @@ class Level
   def start_level    
     @level_finish_sound_instance.stop if @level_finish_sound_instance
     @level_finish_sound_instance = nil
-    if @level >= @@level_config.size
-    	@current_config = @@level_config[@@level_config.size - 1]
+    if @level >= @level_config.size
+    	@current_config = @level_config[@level_config.size - 1]
     else
-    	@current_config = @@level_config[@level]
+    	@current_config = @level_config[@level]
     end
     configure_level(@current_config)
   end
@@ -87,7 +81,9 @@ class Level
     #set up level balls
     @balls = []
     @balls = @balls + current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if current_config[:from_top]
-  	@balls = @balls + current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.width)})} if current_config[:from_left]
+  	@balls = @balls + current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.height)})} if current_config[:from_left]
+    @balls = @balls + current_config[:from_bottom].times.map {Ball.new(@game_window, @player, 0, -10, lambda {rand(@game_window.width)}, lambda {@game_window.height})} if current_config[:from_bottom]
+  	@balls = @balls + current_config[:from_right].times.map {Ball.new(@game_window, @player, -10, 0, lambda {@game_window.width}, lambda {rand(@game_window.height)})} if current_config[:from_right]
     #set up level icons
     @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, current_config[:ball_image], true)} if current_config[:ball_image]
     @player.player_icon = Gosu::Image.new(@game_window, current_config[:player_image], true) if current_config[:player_image]
