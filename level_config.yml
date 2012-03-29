@@ -58,8 +58,12 @@
   :ball_image: default/asteroid.png
   :background_image: default/orange_nebula_stars.jpg
 #level 9
-- :from_left: 3
-  :from_right: 1
+- :from_custom:
+     :count: 2
+     :xinc: lambda {|x,y,xs,ys| 100*(Math.sin(y.to_f/100)) + xs}
+     :yinc: lambda {|x,y,xs,ys| y + 10}
+     :xinit: lambda {rand(600) + 100}
+     :yinit: lambda {0}
   :duration: 10
   :player_image: default/player1.png
   :player_shield_image: default/player1_neon.png

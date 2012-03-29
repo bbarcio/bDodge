@@ -84,6 +84,8 @@ class Level
   	@balls = @balls + current_config[:from_left].times.map {Ball.new(@game_window, @player, 10, 0, lambda {0}, lambda {rand(@game_window.height)})} if current_config[:from_left]
     @balls = @balls + current_config[:from_bottom].times.map {Ball.new(@game_window, @player, 0, -10, lambda {rand(@game_window.width)}, lambda {@game_window.height})} if current_config[:from_bottom]
   	@balls = @balls + current_config[:from_right].times.map {Ball.new(@game_window, @player, -10, 0, lambda {@game_window.width}, lambda {rand(@game_window.height)})} if current_config[:from_right]
+  	@balls = @balls + current_config[:from_custom][:count].times.map {Ball.new(@game_window, @player, eval(current_config[:from_custom][:xinc]), eval(current_config[:from_custom][:yinc]), 
+  	    eval(current_config[:from_custom][:xinit]),  eval(current_config[:from_custom][:yinit]))} if current_config[:from_custom]    
     #set up level icons
     @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, current_config[:ball_image], true)} if current_config[:ball_image]
     @player.player_icon = Gosu::Image.new(@game_window, current_config[:player_image], true) if current_config[:player_image]

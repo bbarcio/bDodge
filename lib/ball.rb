@@ -16,8 +16,16 @@ class Ball
       @player.increase_score
       reset!
     else
-      @y = @y + @yinc
-      @x = @x + @xinc
+      if @yinc.respond_to? :call
+         @y = @yinc.call(@x, @y, @xstart, @ystart)
+      else
+         @y = @y + @yinc
+      end
+      if @xinc.respond_to? :call
+         @x = @xinc.call(@x, @y, @xstart, @ystart)
+      else      
+        @x = @x + @xinc
+      end
     end
   end
 
@@ -34,8 +42,8 @@ class Ball
   end
 
   def reset!
-    @y = @yinit.call
-    @x = @xinit.call
+    @y = @ystart = @yinit.call
+    @x = @xstart = @xinit.call
   end
 end
 
