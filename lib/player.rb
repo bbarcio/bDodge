@@ -2,6 +2,7 @@ class Player
   HIT_BUFFER = 30
   CLOSE_BUFFER = -60
   SHIELD_LENGTH = 3
+  attr_accessor :lives
   attr_reader :shield_count
   attr_accessor :player_icon, :player_shield_icon
   def initialize(game_window)
@@ -24,8 +25,8 @@ class Player
     @score = 0
     @shield = false
     @shield_count = 0
-    @shield_time = Time.now
     @shield_time_left = 0
+    @lives = 3
   end
   
   def increase_score
@@ -56,9 +57,10 @@ class Player
       if @game_window.button_down? Gosu::Button::KbDown
         move_down
       end
-	unless (shield_time_left > 0 )
+	if (@shield_time_left < 0 )
 	  deactivate_shield
 	end
+    @shield_time_left -= 1 if @shield
   end
   
   def move_left
@@ -97,7 +99,7 @@ class Player
     unless @shield || @shield_count == 0
         @shield_count = @shield_count - 1
   		@shield = true
-  		@shield_time = Time.now
+  		@shield_time_left = SHIELD_LENGTH * MyGame::FRAME_RATE
   		@icon = @player_shield_icon
   		@shield_sound_instance = @shield_sound.play
   	end
@@ -118,9 +120,7 @@ class Player
   end
   
   def shield_time_left
-    return @shield_time_left unless @game_window.running
-  	now = Time.now
-  	@shield_time_left = (SHIELD_LENGTH - (now - @shield_time)).round
+    return (@shield_time_left.to_f/(MyGame::FRAME_RATE)).round 
   end
 
   def hit_by?(balls)
@@ -138,7 +138,10 @@ class Player
     	@close_sound_instance.stop if @close_sound_instance
     	@close_sound_instance = nil
     end
-    
+    if hit
+      @lives = @lives - 1 
+      balls.each {|ball| ball.reset!}
+    end
     hit  
   end
 end

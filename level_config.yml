@@ -21,7 +21,7 @@
   :ball_image: default/asteroid.png
   :background_image: default/orange_nebula_stars.jpg
 #level 4
-- :from_bottom: 3
+- :from_right: 3
   :duration: 10
   :player_image: default/player1.png
   :player_shield_image: default/player1_neon.png

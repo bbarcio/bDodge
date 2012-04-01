@@ -1,5 +1,6 @@
 class Ball
   attr_accessor :icon
+  attr_reader :x, :y
   def initialize(game_window, player, xinc = 0, yinc = 10, xinit = lambda {rand(@game_window.width)}, yinit = lambda {0})
     @game_window = game_window
     @icon = Gosu::Image.new(@game_window, "default/asteroid.png", true)
@@ -31,14 +32,6 @@ class Ball
 
   def draw
     @icon.draw(@x,@y,MyGame::Z_BALL)
-  end
-
-  def x
-    @x
-  end
- 
-  def y
-    @y
   end
 
   def reset!

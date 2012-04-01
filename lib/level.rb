@@ -14,31 +14,27 @@ class Level
     reset
   end 
   
-  def time_left
-    return @time_left unless @game_window.running
-  	now = Time.now
-  	@time_left = (@current_config[:duration] - (now - @start_time)).round
-  end
-  
   def update
     #check for level end and increase level
-    if (time_left > 0)
+    if (@time_left > 0)
+        @time_left -= 1 if @game_window.running
     	@balls.each {|ball| ball.update}
 	else
 	    @level = @level + 1 unless @between_levels
-		if time_left + @level_delay < 0
+		if @level_delay < 0
 		    @between_levels = false
 			start_level
 		else
+   	      @level_delay -= 1 if @game_window.running
 		  @between_levels = true
 		  @level_finish_sound_instance = @level_finish_sound.play unless @level_finish_sound_instance
-		end
-		
+		end		
 	end
   end
   
   def draw
     unless @between_levels
+        #puts "time_left = #{@time_left}"
     	@balls.each {|ball| ball.draw}
 	else
 	  level_text = "Level #{@level + 1}"
@@ -47,6 +43,7 @@ class Level
   end
   
   def start_level    
+    @level_delay = 3 * 60 #3 seconds
     @level_finish_sound_instance.stop if @level_finish_sound_instance
     @level_finish_sound_instance = nil
     if @level >= @level_config.size
@@ -55,6 +52,7 @@ class Level
     	@current_config = @level_config[@level]
     end
     configure_level(@current_config)
+    @time_left = @current_config[:duration] * 60
   end
   
   def configure_level(current_config)

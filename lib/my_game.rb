@@ -1,10 +1,12 @@
 class MyGame < Gosu::Window
   attr_reader :running
+  attr_reader :paused
   attr_accessor :background_color
   attr_accessor :background_image
   attr_accessor :font_color
   Z_BG, Z_PLAYER, Z_BALL = (0..2).to_a
   PADDING = 10
+  FRAME_RATE = 60
   BLACK = Gosu::Color.new(0xff000000)
   WHITE = Gosu::Color.new(0xffffffff)
  
@@ -26,14 +28,15 @@ class MyGame < Gosu::Window
   end
 
   def update
-    if @running
+    if @running && !@paused
         @player1.update
         @level.update
         if @player1.hit_by? @level.balls
           @death_sound.play
-          stop_game!
+          stop_game! if @player1.lives == 0
         end
-    else
+    end
+    unless @running
       # the game is currently stopped
       if button_down? Gosu::Button::KbEscape
         restart_game
@@ -52,17 +55,31 @@ class MyGame < Gosu::Window
   	if id == Gosu::Button::KbQ
       	self.close
 	end
+  	if id == Gosu::Button::KbP
+      	@paused = !@paused
+	end	
   end
 
   def draw
+    draw_background
+    @player1.draw
+    @level.draw
+    draw_ingame_text	
+    unless @running
+     draw_endgame_text
+    end   
+  end
+  
+  def draw_background
     if @background_image
     	@background_image.draw(0,0,Z_BG)
     else
     	draw_quad(0, 0, @background_color, width, 0, @background_color, 
     	  0, height, @background_color, width, height, @background_color)
 	end
-    @player1.draw
-    @level.draw
+  end
+  
+  def draw_ingame_text
     score_text = "Score: #{@player1.score}"
     @font.draw(score_text, width - (@font.text_width(score_text)+PADDING),PADDING,3,1,1,@font_color)
     highscore_text = "Highscore: #{@highscores[0][:score]}"
@@ -73,25 +90,25 @@ class MyGame < Gosu::Window
     	shield_text = "Shield Remaining #{@player1.shield_time_left}"
     	@font.draw(shield_text,  width/2 - (@font.text_width(shield_text)/2),height/2 - (20)/2,3,1,1,@font_color)
 	end
+	lives_text = "Lives: #{@player1.lives}"
+    @font.draw(lives_text, PADDING, height - (20 + PADDING),3,1,1,@font_color)
 	shield_text = "Shield: #{@player1.shield_count}"
-    @font.draw(shield_text, PADDING, height - (20 + PADDING),3,1,1,@font_color)
-	
-    unless @running
-      restart_text = "Hit 'esc' to restart"
-      @font.draw(restart_text, width/2 - (@font.text_width(restart_text)/2),height/2 - (20)/2-50,3,1,1,@font_color)
-      highscore_text = "Highscores"
-
-      @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),height/2 - (20)/2,3,1,1,@font_color)
-      nextline = 30
-      @highscores.each do |h| 
-        highscore_text = h[:name] + ': ' + h[:score].to_s
-        @font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),height/2 - (20)/2 + nextline,3,1,1,@font_color)
-        nextline = nextline + 30
-      end
-    end
-    
+    @font.draw(shield_text, width - (@font.text_width(shield_text)+PADDING), height - (20 + PADDING),3,1,1,@font_color)
   end
 
+  def draw_endgame_text
+    restart_text = "Hit 'esc' to start"
+	@font.draw(restart_text, width/2 - (@font.text_width(restart_text)/2),height/2 - (20)/2-50,3,1,1,@font_color)
+	highscore_text = "Highscores"
+	@font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),height/2 - (20)/2,3,1,1,@font_color)
+	nextline = 30
+	@highscores.each do |h| 
+	highscore_text = h[:name] + ': ' + h[:score].to_s
+	@font.draw(highscore_text, width/2 - (@font.text_width(highscore_text)/2),height/2 - (20)/2 + nextline,3,1,1,@font_color)
+	nextline = nextline + 30
+	end  
+  end
+  
   def stop_game!
     @running = false
     if @player1.score > @highscores[4][:score]
