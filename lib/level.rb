@@ -20,6 +20,7 @@ class Level
         @time_left -= 1 if @game_window.running
     	@balls.each {|ball| ball.update}
 	else
+	    @balls = [] unless @balls.empty?
 	    @level = @level + 1 unless @between_levels
 		if @level_delay < 0
 		    @between_levels = false
