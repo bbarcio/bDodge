@@ -4,6 +4,7 @@ class MyGame < Gosu::Window
   attr_accessor :background_color
   attr_accessor :background_image
   attr_accessor :font_color
+  attr_accessor :music
   Z_BG, Z_PLAYER, Z_BALL = (0..2).to_a
   PADDING = 10
   FRAME_RATE = 60
@@ -12,6 +13,8 @@ class MyGame < Gosu::Window
  
   def initialize(level_config_file)    
     super(800, 800, false)
+    @music = Gosu::Song.new(self, "default/bSong1.mp3")
+    @music.play(true)
     @player1 = Player.new(self)
     @level = Level.new(self, @player1, level_config_file)
     @running = false
@@ -23,8 +26,7 @@ class MyGame < Gosu::Window
     @background_image = Gosu::Image.new(self, "default/orange_nebula_stars.jpg", true)
     @font_color = WHITE
     @death_sound = Gosu::Sample.new(self, "default/death.mp3")
-    @music = Gosu::Song.new(self, "default/bSong1.mp3")
-  	@music.play(true)
+
   end
 
   def update

@@ -77,6 +77,12 @@ class Level
     	# if no background color specified, reset back to black
     	@game_window.font_color = MyGame::WHITE
     end
+    #set music
+    if current_config[:music]
+      play_music = true if @game_window.music.playing?
+      @game_window.music = Gosu::Song.new(@game_window, current_config[:music])
+      @game_window.music.play(true) if play_music
+    end
     #set up level balls
     @balls = []
     @balls = @balls + current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, 10, lambda {rand(@game_window.width)}, lambda {0})} if current_config[:from_top]
