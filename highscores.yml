@@ -1,11 +1,11 @@
 --- 
-- :name: bbb
-  :score: 2640
-- :name: abb
-  :score: 1600
-- :name: abb
-  :score: 1320
-- :name: abb
-  :score: 1240
-- :name: abb
-  :score: 1200
+- :score: 2640
+  :name: bbb
+- :score: 2420
+  :name: abb
+- :score: 1810
+  :name: abb
+- :score: 1600
+  :name: abb
+- :score: 1350
+  :name: abb

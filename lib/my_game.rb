@@ -90,12 +90,12 @@ class MyGame < Gosu::Window
     @font.draw(level_text, PADDING,PADDING,3,1,1,@font_color)
     if @player1.shield?
     	shield_text = "Shield Remaining #{@player1.shield_time_left}"
-    	@font.draw(shield_text,  width/2 - (@font.text_width(shield_text)/2),height/2 - (20)/2,3,1,1,@font_color)
-	end
-	lives_text = "Lives: #{@player1.lives}"
+    	@font.draw(shield_text,  width/2 - (@font.text_width(shield_text)/2),height/2 - (50)/2,3,1,1,@font_color)
+    end
+    lives_text = "Lives: #{@player1.lives}"
     @font.draw(lives_text, PADDING, height - (20 + PADDING),3,1,1,@font_color)
-	shield_text = "Shield: #{@player1.shield_count}"
-    @font.draw(shield_text, width - (@font.text_width(shield_text)+PADDING), height - (20 + PADDING),3,1,1,@font_color)
+    shield_text = "Shield: #{@player1.shield_count}"
+     @font.draw(shield_text, width - (@font.text_width(shield_text)+PADDING), height - (20 + PADDING),3,1,1,@font_color)
   end
 
   def draw_endgame_text
