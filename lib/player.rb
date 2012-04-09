@@ -2,6 +2,7 @@ class Player
   HIT_BUFFER = 30
   CLOSE_BUFFER = -60
   SHIELD_LENGTH = 3
+  NUM_LIVES = 3
   attr_accessor :lives
   attr_reader :shield_count
   attr_accessor :player_icon, :player_shield_icon
@@ -26,7 +27,7 @@ class Player
     @shield = false
     @shield_count = 0
     @shield_time_left = 0
-    @lives = 3
+    @lives = NUM_LIVES
   end
   
   def increase_score

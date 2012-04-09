@@ -1,4 +1,4 @@
---- 
+---
 #level 1
 - :from_top: 1
   :duration: 10
@@ -6,6 +6,7 @@
   :player_shield_image: default/player1_neon.png
   :ball_image: default/asteroid.png
   :background_image: default/orange_nebula_stars.jpg
+  :level_name: get ready!
 #level 2
 - :from_top: 3
   :duration: 10

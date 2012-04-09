@@ -13,12 +13,12 @@ class MyGame < Gosu::Window
  
   def initialize(level_config_file)    
     super(800, 800, false)
+    @running = false
+    @paused = false
     @music = Gosu::Song.new(self, "default/bSong1.mp3")
     @music.play(true)
     @player1 = Player.new(self)
     @level = Level.new(self, @player1, level_config_file)
-    @running = false
-    @paused = false
     self.caption = "bDodge"
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @highscores = YAML::load(File.open 'highscores.yml')
@@ -64,10 +64,12 @@ class MyGame < Gosu::Window
 
   def draw
     draw_background
-    @player1.draw
-    @level.draw
-    draw_ingame_text	
-    unless @running
+    draw_ingame_text
+    if @running
+      @player1.draw
+      @level.draw
+
+    else
      draw_endgame_text
     end   
   end

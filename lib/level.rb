@@ -16,35 +16,45 @@ class Level
   
   def update
     #check for level end and increase level
-    if (@time_left > 0)
-        @time_left -= 1 if @game_window.running
+    if (!@between_levels &&  @time_left > 0)
+      @time_left -= 1 if @game_window.running
     	@balls.each {|ball| ball.update}
-	else
-	    @balls = [] unless @balls.empty?
-	    @level = @level + 1 unless @between_levels
-		if @level_delay < 0
-		    @between_levels = false
-			start_level
-		else
-   	      @level_delay -= 1 if @game_window.running
-		  @between_levels = true
-		  @level_finish_sound_instance = @level_finish_sound.play unless @level_finish_sound_instance
-		end		
-	end
+    else
+#      @balls = [] unless @balls.empty?
+      unless @between_levels
+        @level = @level + 1
+        start_level
+      end
+
+      if @level_delay < 0
+        @between_levels = false
+        #start_level
+      else
+        @level_delay -= 1 if @game_window.running
+      end
+    end
   end
   
   def draw
     unless @between_levels
         #puts "time_left = #{@time_left}"
-    	@balls.each {|ball| ball.draw}
-	else
-	  level_text = "Level #{@level + 1}"
+      unless @current_config[:level_text]
+    	  @balls.each {|ball| ball.draw}
+      else
+        level_text = @current_config[:level_text]
+        @level_font.draw(level_text, @game_window.width/2 - (@level_font.text_width(level_text)/2),@game_window.height/2 - (20)/2,3,1,1,@game_window.font_color)
+      end
+    else
+      level_text = @current_config[:level_name] ? @current_config[:level_name] : "Level #{@level + 1}"
       @level_font.draw(level_text, @game_window.width/2 - (@level_font.text_width(level_text)/2),@game_window.height/2 - (20)/2,3,1,1,@game_window.font_color)
-	end
+    end
   end
   
   def start_level    
     @level_delay = 3 * 60 #3 seconds
+    @between_levels = true
+    @level_finish_sound_instance = @level_finish_sound.play unless @level_finish_sound_instance
+
     @level_finish_sound_instance.stop if @level_finish_sound_instance
     @level_finish_sound_instance = nil
     if @level >= @level_config.size
