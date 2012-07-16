@@ -35,3 +35,15 @@
   :level_name: get ready!
   :ball_config:
     letters: BOTTOM_ROW
+#level 4
+- :from_top: 1
+  :yinc: 5
+  :duration: 10
+  :ball_type: TextBall
+  :player_image: default/player1.png
+  :player_shield_image: default/player1_neon.png
+  :ball_image: default/asteroid.png
+  :background_image: default/orange_nebula_stars.jpg
+  :level_name: get ready!
+  :ball_config:
+    letters: ALL_ROWS

@@ -2,6 +2,7 @@ class TextBall < Ball
   TOP_ROW = %w(w e r t y u i o p)
   HOME_ROW = %w(a s d f g h j k l ;)
   BOTTOM_ROW = %w(z x c v b n m , . /)
+  ALL_ROWS = TOP_ROW + HOME_ROW + BOTTOM_ROW
   attr_accessor :letters
 
   def initialize(game_window, player, xinc = 0, yinc = 10, xinit = lambda {rand(@game_window.width)}, yinit = lambda {0})
