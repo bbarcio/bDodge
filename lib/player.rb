@@ -6,6 +6,7 @@ class Player
   attr_accessor :lives
   attr_reader :shield_count
   attr_accessor :player_icon, :player_shield_icon
+  attr_accessor :last_keypress
   def initialize(game_window)
     @game_window = game_window
     @player_icon = Gosu::Image.new(@game_window, "default/player1.png", true)
@@ -58,6 +59,7 @@ class Player
       if @game_window.button_down? Gosu::Button::KbDown
         move_down
       end
+
 	if (@shield_time_left < 0 )
 	  deactivate_shield
 	end

@@ -59,7 +59,8 @@ class MyGame < Gosu::Window
 	end
   	if id == Gosu::Button::KbP
       	@paused = !@paused
-	end	
+    end
+    @player1.last_keypress = button_id_to_char(id)
   end
 
   def draw

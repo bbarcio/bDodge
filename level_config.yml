@@ -1,6 +1,7 @@
 ---
 #level 1
 - :from_top: 1
+  :yinc: 5
   :duration: 10
   :player_image: default/player1.png
   :player_shield_image: default/player1_neon.png
@@ -9,6 +10,7 @@
   :level_name: get ready!
 #level 2
 - :from_top: 3
+  :yinc: 5
   :duration: 10
   :player_image: default/player1.png	
   :player_shield_image: default/player1_neon.png

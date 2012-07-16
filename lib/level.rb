@@ -11,6 +11,7 @@ class Level
     @level_font = Gosu::Font.new(@game_window, Gosu::default_font_name, 20)
     @level_finish_sound = Gosu::Sample.new(@game_window, "default/level_finish.mp3")	
     @time_left = 0
+    @ball_class = Ball#TextBall
     reset
   end 
   
@@ -93,16 +94,21 @@ class Level
       @game_window.music = Gosu::Song.new(@game_window, current_config[:music])
       @game_window.music.play(true) if play_music
     end
+    if current_config[:ball_type]
+      @ball_class = Kernel.const_get current_config[:ball_type]
+    end
+
     #set up level balls
     @balls = []
-    @balls = @balls + current_config[:from_top].times.map {Ball.new(@game_window, @player, 0, current_config[:yinc] ? current_config[:yinc] : 10, lambda {rand(@game_window.width)}, lambda {0})} if current_config[:from_top]
-  	@balls = @balls + current_config[:from_left].times.map {Ball.new(@game_window, @player, current_config[:xinc] ? current_config[:xinc] : 10, 0, lambda {0}, lambda {rand(@game_window.height)})} if current_config[:from_left]
-    @balls = @balls + current_config[:from_bottom].times.map {Ball.new(@game_window, @player, 0, current_config[:yinc] ? current_config[:yinc] : -10, lambda {rand(@game_window.width)}, lambda {@game_window.height})} if current_config[:from_bottom]
-  	@balls = @balls + current_config[:from_right].times.map {Ball.new(@game_window, @player, current_config[:xinc] ? current_config[:xinc] : -10, 0, lambda {@game_window.width}, lambda {rand(@game_window.height)})} if current_config[:from_right]
-  	@balls = @balls + current_config[:from_custom][:count].times.map {Ball.new(@game_window, @player, eval(current_config[:from_custom][:xinc]), eval(current_config[:from_custom][:yinc]), 
+    @balls = @balls + current_config[:from_top].times.map {@ball_class.new(@game_window, @player, 0, current_config[:yinc] ? current_config[:yinc] : 10, lambda {rand(@game_window.width)}, lambda {0})} if current_config[:from_top]
+  	@balls = @balls + current_config[:from_left].times.map {@ball_class.new(@game_window, @player, current_config[:xinc] ? current_config[:xinc] : 10, 0, lambda {0}, lambda {rand(@game_window.height)})} if current_config[:from_left]
+    @balls = @balls + current_config[:from_bottom].times.map {@ball_class.new(@game_window, @player, 0, current_config[:yinc] ? current_config[:yinc] : -10, lambda {rand(@game_window.width)}, lambda {@game_window.height})} if current_config[:from_bottom]
+  	@balls = @balls + current_config[:from_right].times.map {@ball_class.new(@game_window, @player, current_config[:xinc] ? current_config[:xinc] : -10, 0, lambda {@game_window.width}, lambda {rand(@game_window.height)})} if current_config[:from_right]
+  	@balls = @balls + current_config[:from_custom][:count].times.map {@ball_class.new(@game_window, @player, eval(current_config[:from_custom][:xinc]), eval(current_config[:from_custom][:yinc]),
   	    eval(current_config[:from_custom][:xinit]),  eval(current_config[:from_custom][:yinit]))} if current_config[:from_custom]    
     #set up level icons
     @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, current_config[:ball_image], true)} if current_config[:ball_image]
+    @balls.each {|ball| ball.set_config current_config[:ball_config] } if current_config[:ball_config]
     @player.player_icon = Gosu::Image.new(@game_window, current_config[:player_image], true) if current_config[:player_image]
     @player.player_shield_icon = Gosu::Image.new(@game_window, current_config[:player_shield_image], true) if current_config[:player_shield_image]
     @player.deactivate_shield
