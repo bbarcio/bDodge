@@ -1,0 +1,65 @@
+---
+#level 1
+- :from_custom:
+     :count: 1
+     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
+     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
+     :xinit: lambda {350}
+     :yinit: lambda {800}
+  :duration: 10
+  :ball_type: TextBall
+  :player_image: NONE
+  :player_shield_image: default/player1_neon.png
+  :ball_image: default/asteroid.png
+  :background_image: kingdom_rush/kingdom_rush.png
+  :level_name: get ready!
+  :ball_config:
+    letters: HOME_ROW
+#level 2
+- :from_custom:
+     :count: 1
+     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
+     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
+     :xinit: lambda {350}
+     :yinit: lambda {800}
+  :duration: 10
+  :ball_type: TextBall
+  :player_image: NONE
+  :player_shield_image: default/player1_neon.png
+  :ball_image: default/asteroid.png
+  :background_image: kingdom_rush/kingdom_rush.png
+  :level_name: get ready!
+  :ball_config:
+    letters: TOP_ROW
+#level 3
+- :from_custom:
+     :count: 1
+     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
+     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
+     :xinit: lambda {350}
+     :yinit: lambda {800}
+  :duration: 10
+  :ball_type: TextBall
+  :player_image: NONE
+  :player_shield_image: default/player1_neon.png
+  :ball_image: default/asteroid.png
+  :background_image: kingdom_rush/kingdom_rush.png
+  :level_name: get ready!
+  :ball_config:
+    letters: BOTTOM_ROW
+#level 4
+- :from_custom:
+     :count: 1
+     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
+     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
+     :xinit: lambda {350}
+     :yinit: lambda {800}
+  :duration: 10
+  :ball_type: TextBall
+  :player_image: NONE
+  :player_shield_image: default/player1_neon.png
+  :ball_image: default/asteroid.png
+  :background_image: kingdom_rush/kingdom_rush.png
+  :level_name: get ready!
+  :ball_config:
+    letters: ALL_ROWS

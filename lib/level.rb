@@ -109,7 +109,8 @@ class Level
     #set up level icons
     @balls.each {|ball| ball.icon = Gosu::Image.new(@game_window, current_config[:ball_image], true)} if current_config[:ball_image]
     @balls.each {|ball| ball.set_config current_config[:ball_config] } if current_config[:ball_config]
-    @player.player_icon = Gosu::Image.new(@game_window, current_config[:player_image], true) if current_config[:player_image]
+    @player.player_icon = Gosu::Image.new(@game_window, current_config[:player_image], true) if current_config[:player_image] && current_config[:player_image] != 'NONE'
+    @player.player_icon = nil if current_config[:player_image] == 'NONE'
     @player.player_shield_icon = Gosu::Image.new(@game_window, current_config[:player_shield_image], true) if current_config[:player_shield_image]
     @player.deactivate_shield
     @player.increase_shield

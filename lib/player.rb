@@ -22,6 +22,7 @@ class Player
   end
 
   def reset
+    return if @icon.nil?
     @x = @game_window.width/2 - @icon.width/2
     @y = @game_window.height - @icon.height
     @score = 0
@@ -36,10 +37,12 @@ class Player
   end
   
   def draw
-    @icon.draw(@x,@y,MyGame::Z_PLAYER)
+    return if @icon.nil?
+    @icon.draw(@x,@y,MyGame::Z_PLAYER) unless @icon.nil?
   end
 
   def update
+      return if @icon.nil?
       if @game_window.button_down? Gosu::Button::KbSpace
         activate_shield
       end
@@ -127,6 +130,7 @@ class Player
   end
 
   def hit_by?(balls)
+    return false if @icon.nil?
     return false if shield?
     hit = balls.any? do |ball|
       Gosu::distance(@x+@icon.width/2, @y+@icon.height/2,ball.x + ball.icon.width/2, ball.y + ball.icon.height/2) < (@icon.height/2 + ball.icon.height/2 - HIT_BUFFER)
