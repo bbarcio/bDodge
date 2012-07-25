@@ -2,8 +2,8 @@
 #level 1
 - :from_custom:
      :count: 1
-     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
-     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
+     :xinc: lambda {|x,y,xs,ys| return x - 5 if y == 510; return x + 5 if y == 345; x }
+     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 160; y }
      :xinit: lambda {350}
      :yinit: lambda {800}
   :duration: 10
@@ -34,10 +34,10 @@
 #level 3
 - :from_custom:
      :count: 1
-     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
-     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
-     :xinit: lambda {350}
-     :yinit: lambda {800}
+     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == ys; return x + 5 if y == 345; x }
+     :yinc: lambda {|x,y,xs,ys| return y-5 if x == 160 || x == 345; y }
+     :xinit: lambda {0}
+     :yinit: lambda {510}
   :duration: 10
   :ball_type: TextBall
   :player_image: NONE
@@ -50,8 +50,8 @@
 #level 4
 - :from_custom:
      :count: 1
-     :xinc: lambda {|x,y,xs,ys| return x + 5 if y == 510; return x - 5 if y == 345; x }
-     :yinc: lambda {|x,y,xs,ys| return y-5 if x == xs || x == 540; y }
+     :xinc: lambda {|x,y,xs,ys| return x + 8 if y == 512; return x - 8 if y == 352; x }
+     :yinc: lambda {|x,y,xs,ys| return y-8 if x == xs || x == 550; y }
      :xinit: lambda {350}
      :yinit: lambda {800}
   :duration: 10
@@ -62,4 +62,4 @@
   :background_image: kingdom_rush/kingdom_rush.png
   :level_name: get ready!
   :ball_config:
-    letters: ALL_ROWS
+    letters: TOP_ROW
